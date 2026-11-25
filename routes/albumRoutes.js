@@ -98,6 +98,29 @@ async function albumRoutes(fastify, options) {
         };
     });
 
+    // DELETE - Raderar ett album
+    fastify.delete('/albums/:id', async (request, reply) => {
+
+        // Kontrollerar att albumet finns
+        const album = fastify.db.prepare(
+            'SELECT * FROM albums WHERE id = ?'
+        ).get(request.params.id);
+
+        if (!album) {
+            return reply.code(404).send({
+                message: 'Albumet hittades inte'
+            });
+        }
+
+        // Raderar albumet från databasen
+        fastify.db.prepare(
+            'DELETE FROM albums WHERE id = ?'
+        ).run(request.params.id);
+
+        return {
+            message: 'Albumet har raderats'
+        };
+    });
 }
 
 module.exports = albumRoutes;
