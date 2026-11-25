@@ -52,6 +52,52 @@ async function albumRoutes(fastify, options) {
             id: result.lastInsertRowid
         });
     });
+
+    // PUT - Uppdaterar ett befintligt album
+    fastify.put('/albums/:id', async (request, reply) => {
+        const { title, artist, release_year, owned } = request.body || {};
+
+        // Kontrollerar att alla fält finns och har rätt datatyp
+        if (
+            typeof title !== 'string' || !title.trim() ||
+            typeof artist !== 'string' || !artist.trim() ||
+            !Number.isInteger(release_year) ||
+            typeof owned !== 'boolean'
+        ) {
+            return reply.code(400).send({
+                message: 'Alla fält måste anges med rätt datatyp: title, artist, release_year och owned.'
+            });
+        }
+
+        // Kontrollerar att albumet finns
+        const album = fastify.db.prepare(
+            'SELECT * FROM albums WHERE id = ?'
+        ).get(request.params.id);
+
+        if (!album) {
+            return reply.code(404).send({
+                message: 'Albumet hittades inte'
+            });
+        }
+
+        // Uppdaterar albumet
+        fastify.db.prepare(`
+            UPDATE albums
+            SET title = ?, artist = ?, release_year = ?, owned = ?
+            WHERE id = ?
+        `).run(
+            title.trim(),
+            artist.trim(),
+            release_year,
+            owned ? 1 : 0,
+            request.params.id
+        );
+
+        return {
+            message: 'Albumet har uppdaterats'
+        };
+    });
+
 }
 
 module.exports = albumRoutes;
