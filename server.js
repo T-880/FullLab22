@@ -6,6 +6,12 @@ const fastify = require('fastify')({
 // Ansluter till databasen
 const db = require('./database/database');
 
+// Gör databasen tillgänglig för routes
+fastify.decorate('db', db);
+
+// Registrerar albumets routes
+fastify.register(require('./routes/albumRoutes'));
+
 // Startaar servern
 const start = async () => {
     try {
