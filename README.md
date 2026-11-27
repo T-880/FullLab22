@@ -1,10 +1,17 @@
+# REST API – Albumsamling
+
 ## Om projektet
 
 Detta projekt är ett REST API för att hantera en personlig albumsamling.
 
 API:et är byggt med Node.js och Fastify och använder SQLite som databas.
 
-Det går att hämta, lägga till, uppdatera och radera album.
+Det går att hämta, lägga till, uppdatera och radera album genom API:ets CRUD-funktioner.
+
+Webbtjänsten är publicerad på Render och kan testas via internet.
+
+**Publik webbtjänst:**
+https://backend-ramverk.onrender.com
 
 ## Tekniker
 
@@ -19,19 +26,23 @@ Det går att hämta, lägga till, uppdatera och radera album.
 2. Öppna projektmappen i terminalen.
 3. Installera paketen:
 
+```bash
 npm install
+```
 
 4. Starta servern:
 
-node server.js
+```bash
+npm start
+```
 
-Servern startar på:
+Servern startar lokalt på:
 
 http://localhost:3000
 
 ## Databas
 
-Databasen innehåller tabellen albums med följande fält:
+Databasen innehåller tabellen `albums` med följande fält:
 
 | Fält | Datatyp | Beskrivning |
 |---|---|---|
@@ -43,53 +54,54 @@ Databasen innehåller tabellen albums med följande fält:
 
 ## API Endpoints
 
-### Hämta alla album
+Samtliga endpoints finns tillgängliga både lokalt och via den publicerade webbtjänsten.
 
-GET /albums
+**Publik basadress:**
+https://backend-ramverk.onrender.com
 
-Hämtar samtliga album.
+| Metod | Endpoint | Funktion |
+|---|---|---|
+| GET | /albums | Hämtar alla album |
+| GET | /albums/:id | Hämtar ett album baserat på ID |
+| POST | /albums | Lägger till ett nytt album |
+| PUT | /albums/:id | Uppdaterar ett befintligt album |
+| DELETE | /albums/:id | Raderar ett album |
 
-### Hämta ett album
+### Exempel på POST
 
-GET /albums/:id
+Skicka följande JSON i request body:
 
-Hämtar ett album baserat på ID.
-
-### Lägg till album
-
-POST /albums
-
-Exempel på JSON:
-
+```json
 {
   "title": "Thriller",
   "artist": "Michael Jackson",
   "release_year": 1982,
   "owned": true
 }
+```
 
-### Uppdatera album
+### Exempel på publik endpoint
 
-PUT /albums/:id
+Hämta alla album:
 
-Skickar albumets nya information i JSON-format.
+https://backend-ramverk.onrender.com/albums
 
-### Radera album
+Hämta ett album med ID 1:
 
-DELETE /albums/:id
-
-Raderar ett album baserat på ID.
+https://backend-ramverk.onrender.com/albums/1
 
 ## Validering
 
 API:et kontrollerar att:
 
-- Title är en textsträng.
-- Artist är en textsträng.
-- Release_year är ett heltal.
-- Owned är ett boolean-värde.
+- `title` är en textsträng.
+- `artist` är en textsträng.
+- `release_year` är ett heltal.
+- `owned` är ett boolean-värde.
 
-Om information saknas eller har fel datatyp returneras ett felmeddelande.
+Om information saknas eller har fel datatyp returneras HTTP-statuskod 400 med ett tydligt felmeddelande.
+
+Om ett album inte hittas returneras HTTP-statuskod 404.
 
 ## Kodstruktur
 
@@ -102,5 +114,19 @@ Om information saknas eller har fel datatyp returneras ett felmeddelande.
 
 API:et har testats med Thunder Client i Visual Studio Code.
 
-Samtliga CRUD-funktioner har testats:
-GET, POST, PUT och DELETE.
+Samtliga CRUD-funktioner har testats på den publicerade webbtjänsten:
+
+- GET – Hämta alla album och ett specifikt album.
+- POST – Lägga till ett album.
+- PUT – Uppdatera ett befintligt album.
+- DELETE – Radera ett album.
+
+Även valideringen har testats genom att skicka felaktig eller ofullständig information.
+
+## Publicering
+
+Webbtjänsten är publicerad via Render och kan nås på:
+
+https://backend-ramverk.onrender.com
+
+Databasen använder SQLite och skapas automatiskt när servern startas.
