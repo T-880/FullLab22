@@ -16,8 +16,8 @@ fastify.register(require('./routes/albumRoutes'));
 const start = async () => {
     try {
         await fastify.listen({
-            port: 3000,
-            host: '127.0.0.1'
+            port: process.env.PORT || 3000,
+            host: '0.0.0.0'
         });
 
         console.log('Servern körs på http://localhost:3000');
